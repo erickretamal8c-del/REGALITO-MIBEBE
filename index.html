@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Para mi novia hermosa 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fuente bonita -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #ffd1f7 0, #ffb3d9 25%, #ff8ccf 50%, #ff5fa2 75%, #ff3b7f 100%);
+      overflow: hidden;
+      color: #4a154b;
+    }
+
+    /* Corazones flotando */
+    .hearts {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .heart {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: white;
+      opacity: .8;
+      transform: rotate(-45deg);
+      animation: floatUp 14s linear infinite;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: inherit;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -9px;
+      left: 0;
+    }
+    .heart::after {
+      top: 0;
+      left: 9px;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) rotate(-45deg) scale(.8); opacity: 0; }
+      20% { opacity: .9; }
+      100% { transform: translateY(-10vh) rotate(-45deg) scale(1.2); opacity: 0; }
+    }
+
+    /* Corazones explosión desde mensaje */
+    .burst-heart {
+      position: fixed;
+      width: 18px;
+      height: 18px;
+      background: white;
+      opacity: 1;
+      transform: rotate(-45deg) scale(0.2);
+      pointer-events: none;
+      z-index: 10;
+      transition: transform 0.7s ease-out, opacity 0.7s ease-out;
+    }
+
+    .burst-heart::before,
+    .burst-heart::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: inherit;
+      border-radius: 50%;
+    }
+
+    .burst-heart::before {
+      top: -9px;
+      left: 0;
+    }
+    .burst-heart::after {
+      top: 0;
+      left: 9px;
+    }
+
+    /* Tarjeta */
+    .card {
+      position: relative;
+      z-index: 1;
+      width: 95%;
+      max-width: 420px;
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 28px;
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: 0 18px 45px rgba(255, 0, 128, 0.3);
+      backdrop-filter: blur(10px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+
+    .card.fade-out {
+      opacity: 0;
+      transform: scale(.9) translateY(-30px);
+      pointer-events: none;
+    }
+
+    .tag {
+      background: rgba(255, 182, 220, .4);
+      padding: 6px 14px;
+      border-radius: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .8rem;
+      color: #b1206d;
+      margin-bottom: 12px;
+    }
+
+    .tag span {
+      font-size: 1rem;
+    }
+
+    .photo-wrapper {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      padding: 5px;
+      background: conic-gradient(from 180deg, #ff8ccf, #ffe0f7, #ffb3d9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 0 4px rgba(255,255,255,.9);
+    }
+
+    .photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .title {
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      margin: 8px 0 16px;
+      font-size: .95rem;
+      color: #7b3f7e;
+    }
+
+    .question {
+      margin-bottom: 18px;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 24px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease, background .2s ease;
+    }
+
+    #btn-yes {
+      background: linear-gradient(135deg, #ff4fa3, #ff85c2);
+      color: white;
+      font-weight: 700;
+    }
+
+    #btn-yes:hover:not(:disabled) {
+      transform: translateY(-1px) scale(1.05);
+      box-shadow: 0 12px 26px rgba(255,0,150,.45);
+    }
+
+    #btn-no {
+      background: #ffe5f4;
+      color: #b1206d;
+      font-weight: 600;
+    }
+
+    #message {
+      min-height: 26px;
+      color:#7b3f7e;
+      font-size:.95rem;
+    }
+
+    /* FINAL */
+    #final-screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1s ease;
+      overflow: hidden;
+      background: radial-gradient(circle at center, rgba(0,0,0,.8), rgba(0,0,0,.95));
+    }
+
+    #final-screen.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    #final-photo {
+      position:absolute;
+      inset:0;
+      margin:auto;
+      max-width:100%;
+      max-height:100%;
+      object-fit:contain;
+      filter: blur(0px) drop-shadow(0 18px 40px rgba(0,0,0,.9));
+      animation: zoom 16s ease-in-out infinite alternate;
+      opacity:.98;
+    }
+
+    @keyframes zoom {
+      0% { transform: scale(1.02); }
+      100% { transform: scale(1.12); }
+    }
+
+    .final-overlay {
+      position: relative;
+      z-index: 3;
+      background: radial-gradient(circle at top, rgba(255,255,255,.18), rgba(10,0,20,.9));
+      padding: 26px 22px;
+      border-radius: 26px;
+      backdrop-filter: blur(12px);
+      text-align: center;
+      max-width: 650px;
+      box-shadow: 0 20px 45px rgba(0,0,0,.85);
+      animation: fadeUp 1s ease forwards;
+      opacity:0;
+      transform: translateY(40px);
+      border: 1px solid rgba(255,255,255,.35);
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    #final-message {
+      font-size:1.35rem;
+      font-weight:500;
+      color:white;
+      text-shadow:0 3px 15px rgba(0,0,0,.9);
+      margin-bottom:10px;
+    }
+
+    .final-note {
+      color:#ffd9f7;
+      font-size:.95rem;
+      opacity:.9;
+    }
+
+    .final-note span {
+      display:inline-block;
+      animation: blink 1.4s infinite;
+    }
+
+    @keyframes blink {
+      0%,100%{opacity:.4; transform:translateY(0);}
+      50%{opacity:1; transform:translateY(-1px);}
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 22px 18px;
+      }
+      .photo-wrapper {
+        width: 115px;
+        height: 115px;
+      }
+      .question {
+        font-size:1.15rem;
+      }
+      #final-message {
+        font-size:1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Música (una sola canción) -->
+  <audio id="bg-music" src="musica.mp3" preload="auto" loop></audio>
+
+  <!-- Corazones del fondo -->
+  <div class="hearts">
+    <div class="heart" style="left:8%;animation-delay:0s;animation-duration:13s;"></div>
+    <div class="heart" style="left:22%;animation-delay:2s;animation-duration:16s;"></div>
+    <div class="heart" style="left:40%;animation-delay:4s;animation-duration:15s;"></div>
+    <div class="heart" style="left:60%;animation-delay:1s;animation-duration:18s;"></div>
+    <div class="heart" style="left:78%;animation-delay:3s;animation-duration:14s;"></div>
+    <div class="heart" style="left:90%;animation-delay:5s;animation-duration:17s;"></div>
+  </div>
+
+  <!-- Tarjeta principal -->
+  <main class="card">
+    <div class="tag">
+      <span>💌</span> Para la niña más hermosa
+    </div>
+
+    <div class="photo-wrapper">
+      <img id="main-photo" src="mifoto.jpg" alt="Foto mía" class="photo" />
+    </div>
+
+    <h1 class="title" id="title">Mi amorcito 💕</h1>
+    <p class="subtitle" id="subtitle">Antes de seguir, responde con sinceridad absoluta…</p>
+    <p class="question" id="question">¿Soy lindo? 🥺</p>
+
+    <div class="buttons">
+      <button id="btn-yes">Sí, demasiado 😍</button>
+      <button id="btn-no">No 😏</button>
+    </div>
+
+    <p id="message"></p>
+  </main>
+
+  <!-- Pantalla final -->
+  <div id="final-screen">
+    <img id="final-photo" src="" alt="Foto nuestra">
+    <div class="final-overlay">
+      <p id="final-message"></p>
+      <p class="final-note">
+        espera 10 segundos que cada vez cambia el mensaje y la foto <span>♥</span>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const btnYes = document.getElementById("btn-yes");
+    const btnNo = document.getElementById("btn-no");
+    const message = document.getElementById("message");
+    const photo = document.getElementById("main-photo");
+    const titleEl = document.getElementById("title");
+    const subtitleEl = document.getElementById("subtitle");
+    const questionEl = document.getElementById("question");
+    const card = document.querySelector(".card");
+    const finalScreen = document.getElementById("final-screen");
+    const finalMsg = document.getElementById("final-message");
+    const finalPhoto = document.getElementById("final-photo");
+    const music = document.getElementById("bg-music");
+
+    let step = 1;
+    let yesScale = 1;
+    let noClickCount = 0;
+    let finalIndex = 0;
+
+    const noMessagesStep1 = [
+      "mmm segura intenta de nuevo",
+      "creo que necesitas lentes nuevos",
+      "voy a hacer puchero hasta que digas que sí",
+      "tu dedo se resbaló prueba otra vez"
+    ];
+
+    const noMessagesStep2 = [
+      "oye no hables así de mi princesa",
+      "claramente alguien no se ha visto bien al espejo",
+      "voy a tener que recordarte lo increíble que eres",
+      "error 404 respuesta incorrecta"
+    ];
+
+    const loveMessages = [
+      "me encanta cómo apareciste en mi vida sin que lo esperara",
+      "gracias por aguantar mis rarezas y seguir quedándote a mi lado",
+      "pensar en ti me baja el ruido de la cabeza",
+      "contigo todo lo simple se siente distinto",
+      "tu risa se me quedó como sonido favorito",
+      "eres la persona a la que quiero contarle lo bueno y lo malo",
+      "me haces querer ser una mejor versión de mí",
+      "sigo sin creer del todo la suerte que tengo contigo",
+      "no tienes idea de cuánto te pienso en silencio",
+      "gracias por cada mensaje y cada momento que me regalas"
+    ];
+
+    const imageFiles = [
+      "1.jpg","2.jpg","3.jpg","4.jpg","5.jpg",
+      "6.jpg","7.jpg","8.jpg","9.jpg","10.jpg",
+      "11.jpg","12.jpg","13.jpg","14.jpg","15.jpg",
+      "16.jpg","17.jpg","18.jpg","19.jpg","20.jpg"
+    ];
+
+    // Prepara música en el primer click (sonando en volumen 0)
+    let musicPrepared = false;
+    document.addEventListener("click", () => {
+      if (!musicPrepared) {
+        music.volume = 0;
+        music.play().catch(() => {});
+        musicPrepared = true;
+      }
+    }, { once: true });
+
+    btnNo.addEventListener("click", () => {
+      if (btnNo.disabled) return;
+
+      yesScale += 0.2;
+      btnYes.style.transform = `scale(${yesScale})`;
+
+      const arr = step === 1 ? noMessagesStep1 : noMessagesStep2;
+      const msgText = arr[noClickCount % arr.length];
+      noClickCount++;
+      message.textContent = msgText;
+
+      btnNo.animate(
+        [
+          { transform: "translateX(0)" },
+          { transform: "translateX(-4px)" },
+          { transform: "translateX(4px)" },
+          { transform: "translateX(0)" },
+        ],
+        { duration: 180, iterations: 1 }
+      );
+    });
+
+    btnYes.addEventListener("click", () => {
+      if (step === 1) {
+        // Pasar a la pregunta sobre ella
+        step = 2;
+        yesScale = 1;
+        noClickCount = 0;
+        btnYes.style.transform = "scale(1)";
+        message.textContent = "a ver seamos sinceros ahora";
+
+        photo.src = "ella.jpg";
+        photo.alt = "Mi niña hermosa";
+
+        titleEl.textContent = "Ahora tú 😏";
+        subtitleEl.textContent = "Pregunta muy importante, respóndela de verdad…";
+        questionEl.textContent = "¿Tú te consideras linda? 💖";
+
+        btnYes.textContent = "Obvio que sí 😌✨";
+        btnNo.textContent = "No, para nada";
+
+        explosionCorazones(10);
+        explosionDesdeElemento(questionEl, 20);
+
+      } else {
+        // Ella dice que sí: final
+        explosionDesdeElemento(questionEl, 40);
+        iniciarFinalRomantico();
+      }
+    });
+
+    function iniciarFinalRomantico() {
+      btnYes.disabled = true;
+      btnNo.disabled = true;
+
+      explosionCorazones(30);
+
+      // Fade out de la tarjeta
+      card.classList.add("fade-out");
+
+      // Fade in de música
+      if (musicPrepared) {
+        let vol = 0;
+        const target = 0.55;
+        const stepVol = target / 30;
+        const fade = setInterval(() => {
+          vol += stepVol;
+          if (vol >= target) {
+            vol = target;
+            clearInterval(fade);
+          }
+          music.volume = vol;
+        }, 50);
+      }
+
+      setTimeout(() => {
+        card.style.display = "none";
+        mostrarFinal();
+      }, 800);
+    }
+
+    function mostrarFinal() {
+      finalScreen.classList.add("active");
+      finalIndex = 0;
+      actualizarMensajeEImagen();
+      setInterval(actualizarMensajeEImagen, 10000);
+    }
+
+    function actualizarMensajeEImagen() {
+      const msg = loveMessages[finalIndex % loveMessages.length];
+      const img = imageFiles[finalIndex % imageFiles.length];
+
+      finalMsg.textContent = msg;
+      finalPhoto.style.opacity = 0;
+
+      setTimeout(() => {
+        finalPhoto.src = img;
+        finalPhoto.animate(
+          [
+            { opacity: 0, transform: "scale(1.05)" },
+            { opacity: 1, transform: "scale(1.12)" }
+          ],
+          { duration: 900, easing: "ease-out" }
+        );
+        finalPhoto.style.opacity = 1;
+      }, 150);
+
+      explosionCorazones(6);
+      explosionDesdeElemento(finalMsg, 24);
+
+      finalIndex++;
+    }
+
+    function explosionCorazones(cantidad) {
+      for (let i = 0; i < cantidad; i++) {
+        crearCorazonInstantaneo();
+      }
+    }
+
+    function crearCorazonInstantaneo() {
+      const h = document.createElement("div");
+      h.classList.add("heart");
+      h.style.left = Math.random() * 100 + "%";
+      h.style.bottom = "0";
+      h.style.animationDuration = 6 + Math.random() * 4 + "s";
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 11000);
+    }
+
+    // Explosión desde un elemento (para todos lados)
+    function explosionDesdeElemento(elemento, cantidad) {
+      const rect = elemento.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+
+      for (let i = 0; i < cantidad; i++) {
+        const heart = document.createElement("div");
+        heart.classList.add("burst-heart");
+        heart.style.left = cx + "px";
+        heart.style.top = cy + "px";
+
+        document.body.appendChild(heart);
+
+        // Ángulo y distancia random
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 60 + Math.random() * 120;
+        const dx = Math.cos(angle) * distance;
+        const dy = Math.sin(angle) * distance;
+
+        requestAnimationFrame(() => {
+          heart.style.transform = `translate(${dx}px, ${dy}px) rotate(-45deg) scale(1.1)`;
+          heart.style.opacity = 0;
+        });
+
+        setTimeout(() => {
+          heart.remove();
+        }, 800);
+      }
+    }
+  </script>
+</body>
+</html>
